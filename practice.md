@@ -201,6 +201,11 @@ any of the properties that a cryptographic hash function might have (pre-image r
 
 38. Given the ciphertext "YOUCANTDECRYPTME", encrypted using the one-time-pad, what is the corresponding plaintext?
 
+If the key was sufficiently random, this should be pretty much impossible to do by hand.
+If we were somehow able to intercept the secret key or had sufficient computational resources available, things would
+be different. Another thing to bear in mind is that if the key is shorter than the plaintext, we can potentially
+use clever frequency analysis and factoring techniques to help determine the key.
 
+However, as it stands, this is pretty much a trick question.
 
 
