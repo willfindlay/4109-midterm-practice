@@ -2,4 +2,4 @@
 
 ## Contributing
 
-Edit `practice.md`. You can use markdown syntax for everything, and TeX syntax for math.
+Edit (practice.md)[./practice.md]. You can use markdown syntax for everything, and TeX syntax for math.
