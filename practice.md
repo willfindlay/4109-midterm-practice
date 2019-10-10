@@ -34,6 +34,15 @@ anything practical, it completely breaks.
 	3. chosen plaintext attack
 	4. chosen ciphertext attack
 
+- ciphertext-only attack
+    - adv. is given $c$ = $E_k(m)$
+    - but they do not know $m$ or $E_k$
+- known-plaintext attack
+    - adv. knows one or more pairs $c_i,m_i$
+- chosen plaintext attack
+    - choose $m$ and given $c$
+- chosen ciphertext attack
+    - choose $c$ and given $m$
 
 5. What needs to be specified in a security model?
 
