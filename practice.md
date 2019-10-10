@@ -23,6 +23,9 @@ Then, simply shift all plaintext characters by $k$ mod the size of the plaintext
 
 3. Explain one situation when the shift cipher gives you prefect security? (That is, you cannot determine the secret key with probability greater than 1/26.)
 
+You would probably have to be encrypting nonsense. At the very least, no frequency analysis should yield
+any keys that are more probable than others. This is hugely impractical; as soon as the caesar cipher is used for
+anything practical, it completely breaks.
 
 4. Briefly explain the following (giving a possible real-world example for each if you can):
 
