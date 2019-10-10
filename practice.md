@@ -17,6 +17,9 @@ $E_k$ and $D_k$ are defined such that $D_k(E_k(x)) = x \forall \text{plaintext }
 
 2. Describe the shift cipher (Caesar cipher).
 
+Define a key $k \in K$ where $K \equiv \mathbb{Z}_{|P|}$.
+In other words, $k$ can be any integer mod the size of the plaintext space.
+Then, simply shift all plaintext characters by $k$ mod the size of the plaintext space.
 
 3. Explain one situation when the shift cipher gives you prefect security? (That is, you cannot determine the secret key with probability greater than 1/26.)
 
