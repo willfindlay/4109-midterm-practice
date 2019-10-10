@@ -125,8 +125,25 @@ u = \frac{\log_2(|K|)}{R_L\log_2{|P|}} where $R_L$ is a redundancy coefficient (
 
 13. DES was a great block cipher when it was created.  Briefly explain the two reasons why it is no longer great today.
 
+- its key size was way to small
+    - brute forcing has gotten easier due to more powerful hardware
+- it had a small block size
+    - it is highly likely to have a duplicated block (which could yield information about the key)
+
 
 14. Describe double-DES (2DES) as described in class. Why is 2DES essentially no more secure than DES even though the number of key bits has doubled? Explain the attack involved.
+
+- weak to a "meet in the middle" attack
+    - because the block length is still the same and we are not
+      really making the problem any harder just by doubling key size
+- how meet in the middle works
+    - three plaintext ciphertext pairs
+    - compute $D_h_1(c_1)$ for all possible keys $h_1$ and store $(D_h_1(c_1), h_1)$ pairs in a hash table
+    - compute $E_h_2(m_1)$ for all possible keys $h_2$
+        - check to see if the result is a key in the hash table
+        - then verify $E_h_2(E_h_1(m_2)) = c_2$ and $E_h_2(E_h_1(m_3)) = c_3$
+- it's basically as fast as bruteforcing regular DES
+    - $2^{57}$
 
 
 15. Triple-DES (3DES) is believed to be a more secure replacement for DES than double-DES.  It encrypts, decrypts then encrypts using DES with 3 different keys K1, K2, K3.
@@ -134,6 +151,11 @@ u = \frac{\log_2(|K|)}{R_L\log_2{|P|}} where $R_L$ is a redundancy coefficient (
 	1. 3DES has 3*56 bits of secret key. Describe how the attack on 2DES can be mounted on 3DES and what the **effective keylength** is. The effective keylength is the number of bits of a key in which a brute force attack has the same cost as the best attack on the system.
 	2. Explain why anyone might want to use 3DES with K1=K2=K3.
 
+- pretty much run the same attack with an extra step of decrypting with the extra key in the middle
+    - effective keylength is 112 since it takes $2^{112}$ steps here
+- having all three keys identical gives backwards compatibility to DES
+    - but this is not recommended
+      as now we can brute force in $O(2^{56})$ steps
 
 16. What block cipher should you use today if you were to need to use a block cipher?
 
