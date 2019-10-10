@@ -5,6 +5,15 @@ author: Findlay et al.
 
 1. A symmetric-key encryption scheme is defined as a 5-tuple (P,C,K,E,D). Complete the definition.
 
+Where:
+
+- $P$ is plaintext space
+- $C$ is ciphertext space
+- $K$ is keyspace
+- $E$ is a set of possible encryption rules $e_k \in E \forall k \in K$
+- $D$ is a set of possible decryption rules $d_k \in D \forall k \in K$
+
+$E_k$ and $D_k$ are defined such that $D_k(E_k(x)) = x \forall \text{plaintext } x$
 
 2. Describe the shift cipher (Caesar cipher).
 
