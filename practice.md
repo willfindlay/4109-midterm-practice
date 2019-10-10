@@ -46,28 +46,63 @@ anything practical, it completely breaks.
 
 5. What needs to be specified in a security model?
 
+- level of security for a security goal with respect to a specific attack model
 
 6. A symmetric-key encryption scheme is **semantically secure** if `Pr(m) = Pr(m|c)`. Explain what this means.
 
-This means the probability of guessing the original message is the same as the probability of guessing
-the original message given the ciphertext. In otherwords, a third party should not be able to determine
+- This means the probability of guessing the original message is the same as the probability of guessing
+the original message given the ciphertext.
+- In otherwords, a third party should not be able to determine
 *any* additional information about the plaintext (other than length), given the ciphertext.
 
 
 7. We briefly discussed **unicity distance** in class.  What does this mean?  Give an example of where it is important.
 
+- minumum length of ciphertext needed to uniquely compute the secret key
+- this is an estimate
+    - in actuality, it could be much different
+- having spurious keys is beneficial to add an element of uncertainty as to whether or not an attacker has guessed the correct key
+
+\[
+u = \frac{\log_2(|K|)}{R_L\log_2{|P|}} where $R_L$ is a redundancy coefficient (English has about 0.75)
+\]
 
 8. The one-time pad is **unconditionally secure** (i.e., it provides perfect security). What are two disadvantages of the one-time pad?
 
+- in order for perfect security, Shannon showed we need a key as long as the plaintext
+    - this means that for example a 1TB hard drive would need a 1TB key
+    - this is a lot of redundancy
+    - also, difficult to share a 1TB key on a secret channel
+        - if we can do that, why not just shared the 1TB message on the secret channel?
+- having to pick a new random key each time (esp. given length above) can introduce a lot of overhead and logistical issues
 
 9. The one-time pad is **malleable**.  Briefly explain what this means and what it means for the one-time-pad.
+
+- this means that it is possible to transform the ciphertext into another ciphertext which still makes sense when decrypted
+- an attacker could modify the message on its way
+- this means we don't have any integrity or origin authentication
 
 
 10. How is a stream cipher related to the one-time pad?
 
+- stream ciphers also encode using random bits
+- however, they can use a small number of truly random bits to generate a secret key
+    - this key is then used with a nonce
+- this produces a long keystream
+- it is similar to the one-time pad but addresses a few of its disadvantages
+
 
 11. Name a block cipher that you can use to encrypt Carleton's yearly calendar. If you cannot explain why not.
 
+- You could use a CBC block cipher with ciphertext stealing padding and a block size of say 128 bits
+- encode the calendar in some meaningful way (say, as a JSON object)
+- pad with zeroes until we get a multiple of 128 bits
+- take the first block and xor with an IV
+- then encrypt with encryption rule
+- then take that ciphertext and xor with the next block
+- and so on
+- then swap last two blocks and truncate by how much we padded
+- this is our final encrypted calendar
 
 12. Briefly explain the following security goals of block ciphers
 
