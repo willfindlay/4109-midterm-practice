@@ -212,6 +212,13 @@ J(x) = / 1||x,    if |x| == n bits
 
 is collision resistant, if `H(x)` is collision resistant, but not pre-image resistant.  Briefly explain why this so.
 
+- collision resistance is clear
+    - 1 || x will be unique for any n-bit x since if x is not n-bits we will have 0 || H(x)
+    - we already said the H(x) was collision resistant, so the second case must be collision resistant too
+- it will not be pre-image reistant because:
+    - if the first bit is 1, we know that the next bits have to be the original x
+    - if the first bit is 0, that depends on the pre-image resistance of H(x)
+
 
 22. Suppose a hash function outputs an n-bit hash.  How many times do we expect to compute this function (with random inputs) before we get a collision? What name do we give to this result?
 
@@ -261,6 +268,9 @@ then use subsequent compression outputs to initialize next
 
 27. The CBC-MAC uses a block cipher in cbc-mode to create a hash function. Is this secure? When is it secure and when is it not?
 
+- fixed message lengths cause problems
+    - in that case, security is based on the underlying block cipher
+
 
 28. Suppose we propose the following MAC: given a message broken into blocks `m_1, m_1, ..., m_r`, we compute
 
@@ -273,6 +283,10 @@ The MAC tag is the value `c_r`. Is this a secure MAC? Can you create any forgeri
 
 
 29. EMAC is the encrypted CBC-MAC.  How does it differ from cbc-mac? Is this secure? What flaw in CBC-MAC does EMAC address?
+
+- instead of spitting out your MAC at the end, encrypt one more time with $k_2$ and take that as your MAC
+- a longer $k$ allows for arbitrary message length
+    - now security is no longer based purely on the block cipher
 
 
 30. In class we saw why that the first version of SSL in Netscape was insecure. Briefly explain why. (The full exact details are not required)
