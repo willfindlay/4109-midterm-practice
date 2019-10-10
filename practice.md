@@ -265,6 +265,13 @@ then use subsequent compression outputs to initialize next
 
 26. Explain why `H_k(m) = h(k||m)` and `H_k(m) = h(m||k)` are not secure MACs when the underlying hash function uses the Merkle-Damgard constructions? Go through the attacks for each.
 
+- for $h(k||m)$
+    - an attacker could append bits to the message and the hash would still appear valid
+    - length extension
+- for $h(m||k)$
+    - length extension no longer works
+    - but now it is potentially vulnerable to hash collision attacks
+
 
 27. The CBC-MAC uses a block cipher in cbc-mode to create a hash function. Is this secure? When is it secure and when is it not?
 
@@ -281,21 +288,42 @@ for `i=1..r`, where `k` is a shared secret key and `c_0 = k`.
 
 The MAC tag is the value `c_r`. Is this a secure MAC? Can you create any forgeries? Does it matter if we insist that the message length be a multiple of the block length? Does it matter if we have to pad the last block?
 
+- this is a CBC-MAC using AES encryption as an encryption rule
+    - therefore, it has all the vulnerabilities associated with a CBC-MAC
+    - the biggest problem here is that since $c_0$ is always $k$, that means we have the same IV every time for the same $k$
+- yes, both the above questions matter
+    - the CBC-MAC is vulnerable given fixed length message
+    - we're now only as secure as the underlying CBC, which I have just shown is not secure due to restrictions on its IV
+- so, even though AES is extremely secure...
+    - this particular CBC MAC has flaws despite its encryption rule
+
 
 29. EMAC is the encrypted CBC-MAC.  How does it differ from cbc-mac? Is this secure? What flaw in CBC-MAC does EMAC address?
 
 - instead of spitting out your MAC at the end, encrypt one more time with $k_2$ and take that as your MAC
-- a longer $k$ allows for arbitrary message length
+- a longer $k_2$ allows for arbitrary message length
     - now security is no longer based purely on the block cipher
+    - if you consider the previous question, now we would be able to harness the full strength of AES
 
 
 30. In class we saw why that the first version of SSL in Netscape was insecure. Briefly explain why. (The full exact details are not required)
+
+- a lot of the "randomness" depended on:
+    - very poor hashing algorithms (MD5)
+    - values that are not secret (PID)
+    - secret values that live in a small space (easier to guess) (microseconds -> $2^{30}$)
+    - values that had an uneven distribution (PPID)
 
 
 31. A cryptographically secure pseudorandom bit generator (CSPRBG) should have two additional properties compared to a typical PRBG.  Briefly, explain the following two properties.
 
 	1. next-bit test
 	2. forward security
+
+- next-bit test
+    - cannot guess next bit given all previous bits with more than 1/2 probability
+- forward security (just remember this as opposite of next-bit)
+    - exposing current state should not reveal previous bits
 
 
 32. The Blum-Blum-Shub PRBG is as follows:
@@ -312,15 +340,40 @@ The MAC tag is the value `c_r`. Is this a secure MAC? Can you create any forgeri
 	1. why is this not used in practice?
 	2. why is it considered secure?
 
-
+- why is this not used in practice?
+    - it's very slow
+    - finding primes takes time
+    - finding exponent and mod of large numbers takes time
+- why is it considered secure?
+    - because factoring is believed to be difficult
+    - if P =/= NP
 
 
 33. Briefly outline how an exhaustive search (brute-force) can be used to find the secret key in a symmetric-key encryption scheme.  This is a ciphertext-only attack. Briefly outline when this attack works, when it fails and
 when the time/space complexity of it.
 
+- try every key one by one until you get the plaintext
+- how do we know when we found the plaintext?
+    - there are some clever ways of verifying
+    - frequency analysis on letters
+    - frequency anlysis on digraphs in a given language
+    - check if the decrpyted plaintext conforms to some sort of protocol
+- when does the attack fail?
+    - if there are spurious keys for the message
+    - if the message does not allow for frequency analysis, digraph analysis etc.
+    (if it was a random message to begin with or only one letter long, etc.)
+- time complexity?
+    - $O(|K|)$
+    - $2^n$ if key is $n$ bits long
 
 
 34. Suppose you have a private key encryption scheme.  Explain why you might want to send a MAC along with the ciphertext when sending messages.
+
+- a MAC would give
+    - data integrity authentication
+    - data origin authentication
+- prevents attacker from spoofing a message from you
+- prevents attacker from modifying data en route
 
 
 35. Suppose you have an ideal random function
@@ -329,6 +382,8 @@ f : {0,1}^n --> {0,1}^{60}.
 ```
 	1. What is the probability that two random inputs lead to a collision?
 	2. How many randomly chosen elements do we need so that the probability that a collision occurs is 1/2.
+
+
 
 
 36. Suppose we have a hash function
@@ -356,21 +411,36 @@ x    h(x)
 Using this hash function, illustrate why it does not satisfy
 any of the properties that a cryptographic hash function might have (pre-image resistance, second pre-image resistance, collision resistance).
 
+- pre-image resistance is not there because 4 maps uniquely to 0, etc.
+- given one output, it's trivial to find another input that maps to it
+- collisions occur all over the place on the output
+
 
 
 37. Describe the padding scheme outlined in class (and discussed in the textbook).
 
+- pad with (block length - number of bytes) block length - number of bytes times
+- if we have a perfect match, add one block and pad with block length block length times
+
 
 38. What is ciphertext stealing? Why would we want to employ this? How does it work when using CBC-mode for a block cipher?
+
+- ciphertext stealing in CBC is when you
+    - pad with all 0's
+    - encrypt as normal
+    - at the end, swap last two blocks
+    - strip off the end of the new last block the number of bits you padded
+- it eliminates the overhead related to padding
+
 
 
 39. Given the ciphertext "YOUCANTDECRYPTME", encrypted using the one-time-pad, what is the corresponding plaintext?
 
-If the key was sufficiently random, this should be pretty much impossible to do by hand.
-If we were somehow able to intercept the secret key or had sufficient computational resources available, things would
-be different. Another thing to bear in mind is that if the key is shorter than the plaintext, we can potentially
+- If the key was sufficiently random, this should be pretty much impossible to do by hand.
+- If we were somehow able to intercept the secret key or had sufficient computational resources available, things would
+be different
+- Another thing to bear in mind is that if the key is shorter than the plaintext, we can potentially
 use clever frequency analysis and factoring techniques to help determine the key.
-
-However, as it stands, this is pretty much a trick question.
+- However, as it stands, this is pretty much a trick question.
 
 
