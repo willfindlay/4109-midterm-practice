@@ -248,6 +248,13 @@ then use subsequent compression outputs to initialize next
 	2. selective forgery
 	3. universal forgery
 
+- existential forgery
+    - attacker constructs at least one message, signature pair where the message was not created by the signer
+- selective forgery
+    - attacker creates a message, signature pair where the message was chosen beforehand by the attacker
+- universal forgery
+    - attacker creates a valid signature for any given message
+
 
 26. Explain why `H_k(m) = h(k||m)` and `H_k(m) = h(m||k)` are not secure MACs when the underlying hash function uses the Merkle-Damgard constructions? Go through the attacks for each.
 
