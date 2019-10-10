@@ -213,29 +213,29 @@ J(x) = / 1||x,    if |x| == n bits
 is collision resistant, if `H(x)` is collision resistant, but not pre-image resistant.  Briefly explain why this so.
 
 
-21. Suppose a hash function outputs an n-bit hash.  How many times do we expect to compute this function (with random inputs) before we get a collision? What name do we give to this result?
+22. Suppose a hash function outputs an n-bit hash.  How many times do we expect to compute this function (with random inputs) before we get a collision? What name do we give to this result?
 
 
-22. What is the Merkle-Damgard construction for hash functions?
+23. What is the Merkle-Damgard construction for hash functions?
 
 
-23. What is MAC? (What is this an acronym for?) What is it used for (which problem does it help address)?
+24. What is MAC? (What is this an acronym for?) What is it used for (which problem does it help address)?
 
 
-24. Briefly explain what each of the following mean w.r.t. MACs.
+25. Briefly explain what each of the following mean w.r.t. MACs.
 
 	1. existential forgery
 	2. selective forgery
 	3. universal forgery
 
 
-25. Explain why `H_k(m) = h(k||m)` and `H_k(m) = h(m||k)` are not secure MACs when the underlying hash function uses the Merkle-Damgard constructions? Go through the attacks for each.
+26. Explain why `H_k(m) = h(k||m)` and `H_k(m) = h(m||k)` are not secure MACs when the underlying hash function uses the Merkle-Damgard constructions? Go through the attacks for each.
 
 
-26. The CBC-MAC uses a block cipher in cbc-mode to create a hash function. Is this secure? When is it secure and when is it not?
+27. The CBC-MAC uses a block cipher in cbc-mode to create a hash function. Is this secure? When is it secure and when is it not?
 
 
-27. Suppose we propose the following MAC: given a message broken into blocks `m_1, m_1, ..., m_r`, we compute
+28. Suppose we propose the following MAC: given a message broken into blocks `m_1, m_1, ..., m_r`, we compute
 
 ```
  c_i = AES_k(m_{i}) XOR  c_{i-1}
@@ -245,19 +245,19 @@ for `i=1..r`, where `k` is a shared secret key and `c_0 = k`.
 The MAC tag is the value `c_r`. Is this a secure MAC? Can you create any forgeries? Does it matter if we insist that the message length be a multiple of the block length? Does it matter if we have to pad the last block?
 
 
-28. EMAC is the encrypted CBC-MAC.  How does it differ from cbc-mac? Is this secure? What flaw in CBC-MAC does EMAC address?
+29. EMAC is the encrypted CBC-MAC.  How does it differ from cbc-mac? Is this secure? What flaw in CBC-MAC does EMAC address?
 
 
-29. In class we saw why that the first version of SSL in Netscape was insecure. Briefly explain why. (The full exact details are not required)
+30. In class we saw why that the first version of SSL in Netscape was insecure. Briefly explain why. (The full exact details are not required)
 
 
-30. A cryptographically secure pseudorandom bit generator (CSPRBG) should have two additional properties compared to a typical PRBG.  Briefly, explain the following two properties.
+31. A cryptographically secure pseudorandom bit generator (CSPRBG) should have two additional properties compared to a typical PRBG.  Briefly, explain the following two properties.
 
 	1. next-bit test
 	2. forward security
 
 
-31. The Blum-Blum-Shub PRBG is as follows:
+32. The Blum-Blum-Shub PRBG is as follows:
 
 ```
   choose random primes p,q with p,q != 3 mod 4
@@ -274,15 +274,15 @@ The MAC tag is the value `c_r`. Is this a secure MAC? Can you create any forgeri
 
 
 
-32. Briefly outline how an exhaustive search (brute-force) can be used to find the secret key in a symmetric-key encryption scheme.  This is a ciphertext-only attack. Briefly outline when this attack works, when it fails and
+33. Briefly outline how an exhaustive search (brute-force) can be used to find the secret key in a symmetric-key encryption scheme.  This is a ciphertext-only attack. Briefly outline when this attack works, when it fails and
 when the time/space complexity of it.
 
 
 
-33. Suppose you have a private key encryption scheme.  Explain why you might want to send a MAC along with the ciphertext when sending messages.
+34. Suppose you have a private key encryption scheme.  Explain why you might want to send a MAC along with the ciphertext when sending messages.
 
 
-34. Suppose you have an ideal random function
+35. Suppose you have an ideal random function
 ```
 f : {0,1}^n --> {0,1}^{60}.
 ```
@@ -290,7 +290,7 @@ f : {0,1}^n --> {0,1}^{60}.
 	2. How many randomly chosen elements do we need so that the probability that a collision occurs is 1/2.
 
 
-35. Suppose we have a hash function
+36. Suppose we have a hash function
 ```
 h : Z_12 --> Z_8
 ```
@@ -317,13 +317,13 @@ any of the properties that a cryptographic hash function might have (pre-image r
 
 
 
-36. Describe the padding scheme outlined in class (and discussed in the textbook).
+37. Describe the padding scheme outlined in class (and discussed in the textbook).
 
 
-37. What is ciphertext stealing? Why would we want to employ this? How does it work when using CBC-mode for a block cipher?
+38. What is ciphertext stealing? Why would we want to employ this? How does it work when using CBC-mode for a block cipher?
 
 
-38. Given the ciphertext "YOUCANTDECRYPTME", encrypted using the one-time-pad, what is the corresponding plaintext?
+39. Given the ciphertext "YOUCANTDECRYPTME", encrypted using the one-time-pad, what is the corresponding plaintext?
 
 If the key was sufficiently random, this should be pretty much impossible to do by hand.
 If we were somehow able to intercept the secret key or had sufficient computational resources available, things would
