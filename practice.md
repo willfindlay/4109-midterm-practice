@@ -110,6 +110,18 @@ u = \frac{\log_2(|K|)}{R_L\log_2{|P|}} where $R_L$ is a redundancy coefficient (
 	2. confusion
 	3. key size
 
+- diffusion
+    - changing a single bit of the message should change about half the bits in ciphertext
+    - this is helpful for reducing malleability
+    - also helps to complicate the ciphertext
+- confusion
+    - each bit of c should depend on several bits of k
+    - this helps complicate the relationship between c and k
+    - complicates the overall ciphertext
+- key size
+    - key size should be big enough to stop easy attacks
+    - should be small enough to still be efficient
+
 
 13. DES was a great block cipher when it was created.  Briefly explain the two reasons why it is no longer great today.
 
