@@ -40,6 +40,10 @@ anything practical, it completely breaks.
 
 6. A symmetric-key encryption scheme is **semantically secure** if `Pr(m) = Pr(m|c)`. Explain what this means.
 
+This means the probability of guessing the original message is the same as the probability of guessing
+the original message given the ciphertext. In otherwords, a third party should not be able to determine
+*any* additional information about the plaintext (other than length), given the ciphertext.
+
 
 7. We briefly discussed **unicity distance** in class.  What does this mean?  Give an example of where it is important.
 
