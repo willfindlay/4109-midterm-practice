@@ -215,11 +215,31 @@ is collision resistant, if `H(x)` is collision resistant, but not pre-image resi
 
 22. Suppose a hash function outputs an n-bit hash.  How many times do we expect to compute this function (with random inputs) before we get a collision? What name do we give to this result?
 
+- we expect a collision after about $2^{n/2}$ steps where $n$ is the hash length
+    - this is called the birthday attack
+    - related probabilistically to the idea of finding two people with the same birthday
+
 
 23. What is the Merkle-Damgard construction for hash functions?
 
+- take message blocks and add padding to last one until they are all size $r$
+- run through a compression function that maps to size $n$
+- use an initialization vector for initialization on the first compression function,
+then use subsequent compression outputs to initialize next
+- sometimes a final step before output
+- this is used in many hash functions in the 90s
+    - MD5
+    - SHA-1
+    - SHA-2
+- susceptible to length extension attacks
+    - we can compute the hash value of a message we don't already know
+
 
 24. What is MAC? (What is this an acronym for?) What is it used for (which problem does it help address)?
+
+- message authentication code
+    - calculated using a private key, verified using a public key
+- it addresses the problem of data origin authentication and data integrity authentication
 
 
 25. Briefly explain what each of the following mean w.r.t. MACs.
