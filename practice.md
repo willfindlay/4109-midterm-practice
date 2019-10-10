@@ -166,7 +166,7 @@ f : {0,1}^n --> {0,1}^{60}.
 	2. How many randomly chosen elements do we need so that the probability that a collision occurs is 1/2.
 
 
-35. Suppose we have a hash function $
+35. Suppose we have a hash function
 ```
 h : Z_12 --> Z_8
 ```
