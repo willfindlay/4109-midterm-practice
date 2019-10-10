@@ -64,8 +64,9 @@ the original message given the ciphertext.
 - having spurious keys is beneficial to add an element of uncertainty as to whether or not an attacker has guessed the correct key
 
 \[
-u = \frac{\log_2(|K|)}{R_L\log_2{|P|}} where $R_L$ is a redundancy coefficient (English has about 0.75)
+u = \frac{\log_2(|K|)}{R_L\log_2{|P|}}
 \]
+where $R_L$ is a redundancy coefficient (English has about 0.75)
 
 8. The one-time pad is **unconditionally secure** (i.e., it provides perfect security). What are two disadvantages of the one-time pad?
 
@@ -159,14 +160,33 @@ u = \frac{\log_2(|K|)}{R_L\log_2{|P|}} where $R_L$ is a redundancy coefficient (
 
 16. What block cipher should you use today if you were to need to use a block cipher?
 
+- probably AES-256
+    - considered the most secure
+    - AES-192 is okay
+    - AES-128 probably shouldn't be used compared to the other two
+
 
 17. Briefly explain what a block cipher mode of operation is.
+
+- use of a block cipher to accomplish a cryptographic goal
+- modes + encryption rule + padding method yields the full block cipher
+- example mode = CBC
+    - IV for first block or ciphertext of previous block for subsequent blocks to xor plaintext before encrypting
 
 
 18. What is the ECB (electronic code book) mode of operation?  What is one flaw of ECB?
 
+- encrypt each block individually
+- it has no semantic security
+
 
 19. What is the CBC (cipher block chaining) mode of operation? Why should the initialization vector (IV) be different for each plaintext message we want to encrypt with this mode?
+
+- cbc is when we XOR the plaintext with a vector before encrypting
+    - for the first block, we use an IV
+    - for the other blocks, we use the previous block's resulting ciphertext
+- without a different IV each time, we open ourselves up to known-plaintext attacks
+    - the attacker will know something about subsequent encryptions by figuring out the common IV
 
 
 20. There are three properties a cryptographic hash function might have.  Briefly explain each.
@@ -174,6 +194,13 @@ u = \frac{\log_2(|K|)}{R_L\log_2{|P|}} where $R_L$ is a redundancy coefficient (
 	1. pre-image resistance (one-way)
 	2. second pre-image resistance (week collision resistance)
 	3. collision resistance (strong collision resistance)
+
+- pre-image resistance (one-way)
+    - if we have some hash $H(m) = h$, it should be intractable that we determine $m$ using $h$
+- second pre-image resistance (week collision resistance)
+    - given a fixed $H(m_1)$, it should be intractable to find $m_2$ such that $H(m_1) = H(m_2)$
+- collision resistance (strong collision resistance)
+    - should be intractable to find any two inputs such that $H(m_1) = H(m_2)$
 
 
 21. The hash function from class
