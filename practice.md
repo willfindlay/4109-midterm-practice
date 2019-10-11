@@ -288,22 +288,20 @@ for `i=1..r`, where `k` is a shared secret key and `c_0 = k`.
 
 The MAC tag is the value `c_r`. Is this a secure MAC? Can you create any forgeries? Does it matter if we insist that the message length be a multiple of the block length? Does it matter if we have to pad the last block?
 
-- this is a CBC-MAC using AES encryption as an encryption rule
-    - therefore, it has all the vulnerabilities associated with a CBC-MAC
-    - the biggest problem here is that since $c_0$ is always $k$, that means we have the same IV every time for the same $k$
-- yes, both the above questions matter
-    - the CBC-MAC is vulnerable given fixed length message
-    - we're now only as secure as the underlying CBC, which I have just shown is not secure due to restrictions on its IV
-- so, even though AES is extremely secure...
-    - this particular CBC MAC has flaws despite its encryption rule
+- this is CBC mode block cipher with AES
+    - for fixed length messages this is secure since AES is secure
+    - if we allow variable length messages, it is no longer secure
+- can you create forgeries?
+    - sure you can
+    - if we know two message, tag pairs we can derive a third message-tag pair without knowing k
+- it doesn't matter what other restrictions we put in place, as long as we have variable length messages
 
 
 29. EMAC is the encrypted CBC-MAC.  How does it differ from cbc-mac? Is this secure? What flaw in CBC-MAC does EMAC address?
 
 - instead of spitting out your MAC at the end, encrypt one more time with $k_2$ and take that as your MAC
 - a longer $k_2$ allows for arbitrary message length
-    - now security is no longer based purely on the block cipher
-    - if you consider the previous question, now we would be able to harness the full strength of AES
+    - we are now fully dependent on security of underlying block cipher
 
 
 30. In class we saw why that the first version of SSL in Netscape was insecure. Briefly explain why. (The full exact details are not required)
@@ -383,6 +381,11 @@ f : {0,1}^n --> {0,1}^{60}.
 	1. What is the probability that two random inputs lead to a collision?
 	2. How many randomly chosen elements do we need so that the probability that a collision occurs is 1/2.
 
+- What is the probability that two random inputs lead to a collision?
+    - it's just like the birthday problem
+    - for $n > 60$ the probability of a collision is 1
+- How many randomly chosen elements do we need so that the probability that a collision occurs is 1/2.
+
 
 
 
@@ -411,9 +414,9 @@ x    h(x)
 Using this hash function, illustrate why it does not satisfy
 any of the properties that a cryptographic hash function might have (pre-image resistance, second pre-image resistance, collision resistance).
 
-- pre-image resistance is not there because 4 maps uniquely to 0, etc.
-- given one output, it's trivial to find another input that maps to it
-- collisions occur all over the place on the output
+- pre-image resistance -> not there because 4 maps uniquely to 0, etc.
+- second pre-image -> given one output, it's trivial to find another input that maps to it
+- collisions -> occur all over the place on the output
 
 
 
