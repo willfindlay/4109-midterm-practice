@@ -79,6 +79,17 @@ library(lubridate)
     - where $R_L$ is redundancy of the language
     - $R_\text{English}$ is about 0.75
 
+# Definition of Symmetric Key Crypto
+
+- 5-tuple $(P,C,K,E,D)$
+    - $P$ is plaintext space
+    - $C$ is ciphertext space
+    - $K$ is keyspace
+    - $E$ is encryption functions $e_k \in E$
+    - $D$ is decryption functions $d_k \in D$
+    - where:
+        - $\forall k \in K, m \in P$, $d_k(e_k(m)) = m$
+
 # Shift Ciphers
 
 ## Caesar Cipher
@@ -372,10 +383,55 @@ library(lubridate)
 
 # MACs
 
+- three efficient algorithms $(G,S,V)$
+    - $G$ generates a key $k$
+    - $S(k,m)$ generates a tag $t$
+    - $V(k,m,t)$ verifies $m$ with tag $t$
+- provides data integrity and data origin authentication
+
 ## Keyed Hashing
 
 - use a secret symmetric key as well as message as input
 - used for MACs and PRFs
+
+## Forgeries
+
+- existential
+    - there exist some forgeries
+- selective
+    - can create a message-tag pair for some chosen message $m$
+- universal
+    - can create a message-tag pair for any message $m$
+
+## Generic Attacks of MACs
+
+- make a MAC from an unkeyed has function if Merkle-Damgard
+    -  $H_k(m) = h(k || m)$
+    - now we can compute $H_k(m||y)$ as selective forgery
+    - only stipulation is we have to prepend original $m$
+    - length-extension attack
+
+## HMAC
+
+- hash (k xored with outter pad appended to the hash of (k xored with inner pad) appened to m)
+    - only as secure as the hash function used
+
+## CBC-MAC
+
+1. encrypt message as normal
+1. discard every $c_i$ except for last which is out MAC
+
+- this is fine with **FIXED LENGTH**
+    - we are as secure as underlying block cipher
+- if we allow variable length messages, there is a length extension attack
+    1. take some $m,t$ pair and...
+    1. send $m||m_1 \oplus t||m_2||...||m_l$ which will have same tag $t$
+
+## EMAC
+
+- same as CBC MAC but we encrypt one extra time at the end with another key
+    - allows arbitrary length
+- can also do encrypt with k, decrypt with k2, then encrypt again with k
 
 # Randomness and PRFs (Chapter 7)
 
@@ -383,6 +439,31 @@ library(lubridate)
     - given all previous bits, we shouldn't know anything more about next bit
 - forward security
     - given current bit, we can't know anything about previous bits
+
+## Some PRNGs That Suck
+
+- ASF software poker
+    - never swapped the last card, so deck was not fully random
+- Original Netscape SSL
+    - relied on values that were not secret
+    - relied on values that were not evenly distributed
+    - relied on modular values that didn't have high period
+
+## Some PRNGs That Don't Suck (We Think)
+
+- blum-blum-shub
+    - difficulty of factoring
+- blum-micalo
+    - computing discrete logarithms modulo p is infeasible
+
+## PRFs
+
+- use keyed hashing like MACs
+- but they have stronger security requirements
+    - they need IND with random sequence and unpredictablility
+    - MACs just can't have any forgeries
+    - if we took $PRF_2(k,x) = PRF_1(k,x)||0$, $PRF_2$ would be unacceptable as a PRF even if $PRF_1$ was secure
+    - but it would still be acceptable as a MAC because we can't make any new forgeries
 
 <!-- References -->
 \clearpage
