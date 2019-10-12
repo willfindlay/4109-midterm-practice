@@ -9,6 +9,7 @@ biblio-style: ieee
 subparagraph: yes
 header-includes:
     - \usepackage{findlayrmd}
+classoptions: twocolumn
 output:
     pdf_document:
         citation_package: biblatex
