@@ -169,11 +169,220 @@ library(lubridate)
 
 # Block Ciphers
 
+- confusion
+    - many bits of $c$ should depend on one bit of $k$
+- diffusion
+    - changing one bit of $m$ should change about 1/2 bits of $c$
+- considerations
+    - key size not too small or too big
+    - block size not too small or too big
+    - high encryption/decryption rates
+    - easy to implement and analyze
+
+## Sub-Perm Networks (AES)
+
+- some choices
+    - 128 bit key with 10 rounds
+    - 192 bit key with 12 rounds
+    - 256 bit key with 14 rounds
+- new gold standard for encryption
+    - full version will never be broken
+    - there are known attacks for reduced versions though
+
+## Feistel (DES)
+
+1. right goes into function $F$
+1. then $F$ output gets xor'ed with left
+1. swap left and right
+- for DES, we do a 16-round feistel
+    - 64 bit block size
+    - 56 bit keylength
+- standard for a long time
+    - eventually replaced by AES
+- small keysize is a problem
+    - but what if we encrypt twice with two keys
+    - 2DES ($E_{k_2}(E_{k_1})$)
+    - but this allows meet in the middle attack (3 pair KPA attack)
+- what about 3 keys
+    - 3DES ($E_{k_3}(D_{k_2}(E_{k_1}))$)
+    - now meet in the middle takes $2^{112}$ steps
+    - no proof more secure, but fairly widely used
+
+## Lai-Massey (IDEA, FOX)
+
+- don't worry about these
+
+## ARX (ChaCha20)
+
+- don't worry about these
+
+## Block Cipher Modes
+
+### ECB
+
+- encrypt each block independently
+- no semantic security
+- this sucks, don't use it
+
+### CBC
+
+1. pad if necessary
+1. xor $m_0$ with IV
+1. encrypt new $m_0$
+1. xor $m_1$ with $c_0$
+1. and so on...
+- this is pretty decent with random IV
+
+### CTR
+
+- actually a stream cipher (size doesn't matter)
+1. run a nonce appended with a counter through the encryption
+1. xor that with plaintext
+1. now you have ciphertext
+- this is another good choice
+
+## Block Cipher Padding
+
+### Normal Padding
+
+- take $x$ is number of bytes smaller than block size
+- append $x$ sets of $x$
+- if we had a perfect match, append one full block of padding
+- this is kind of wasteful
+
+### Ciphertext Stealing (CBC)
+
+- append all 0's
+- encrypt as normal
+- swap last two blocks
+- truncate new last block by the number of 0's you appended
+
 # Stream Ciphers
+
+- secret key and nonce generate a pseudorandom keystream
+- encrypts a single digit at a time
+    - keystream xor plaintext gives ciphertext
+- should have long period
+- should be IND truly random sequence
+- forward and next-bit security
+
+## Synchronous
+
+- keystream generated independently of $p$ and $c$
+- Alice and Bob must be synchronized
+    - missing a single bit corrupts decryption
+- single errors are not propagated
+
+## Asynchronous
+
+- keystream depends on previous bits of $c$
+- synchronizes itself
+- bit errors will cause some bits to decrypt incorrectly, but can self-synchronize
+- causes diffusion of plaintext
+
+## Stateful
+
+- secret internal state that changes as keyystream computed
+
+## Counter-Based
+
+- no internal state
+- each block is defined by $k$, a nonce, and a counter
 
 # Hashing Functions
 
+- one-way function
+- easy to compute
+- hard to reverse
+- we don't know if these really exist
+    - if $P \ne NP$, they exist
+    - we're pretty certain they do
+
+## Properties
+
+### All Hashes
+
+- compression
+    - take any length and compress to some fixed length
+- ease of computation
+
+### Cryptographic Hashes
+
+- Preimage Resistance (PIR)
+    - hard to find $x$ given $h(x)$
+- Second Preimage Resistance (SPIR)
+    - given $x$, hard to find $x\prime$ such that $h(x) = h(x\prime)$
+- Collision Resistance (CR)
+    - hard to find any pair $\{x,x\prime\}$ such that $h(x) = h(x\prime)$
+
+### Desirable Properties
+
+- resists length extension attacks
+- hard to find messages with similar hashes
+- non-malleable
+- ideally, acts like random function
+
+## Finding Preimages
+
+1. given $y$
+1. try different $h(x)$ until $h(x) = y$
+- we expect to be done in $2^n$ steps for binary alphabet
+
+## Finding Collisions (Naive)
+
+1. store $(x, h(x))$ pairs
+1. keep going until we find $(x, y)$ and $(x\prime, y)$
+- about 2^{n/2} steps (birthday attack)
+- say $n$ was large
+    - this could take petabytes of storage
+
+## Rho Method for Finding Collision (Space-Efficient)
+
+1. choose a random input $x$
+1. set $H\prime_1 = H_1 = h(x)$
+1. set $H_2 = h(H_1)$
+1. set $H\prime_2 = h(h(H\prime_1))$
+1. until we find $H\prime_i = H_i$
+    - set $H_{i+1} = h(H_i)$
+    - set $H\prime_{i+1} = h(h(H\prime_i))$
+- summary of the method:
+    - basically init $H$ and $H\prime on some random hash$
+    - compute hashes for $H$ and double hashes for $H\prime$ until we find $H = H\prime$
+    - only store four values here, so $O(1)$ space
+    - apparently it can be shown this takes $2^{n/2}$ steps still
+
+## Merkle-Damgard
+
+- MD5
+- SHA-1
+- SHA-2
+- (but not SHA-3, they realized it sucks by then)
+
+1. pad last message block
+1. take $IV$ and message block 1 as input to compression function
+1. take output of previous compression function and next block as input
+1. keep going until last output is hash (sometimes extra work at this step)
+- this SUCKS, don't use it
+    - because of length extension attacks
+
+### Length Extension on Merkle-Damgard
+
+- all you need to do is join mid-way through the hash function and keep hashing as normal
+- append your message on the end
+
 # MACs
+
+## Keyed Hashing
+
+- use a secret symmetric key as well as message as input
+- used for MACs and PRFs
+
+# Randomness and PRFs (Chapter 7)
+
+- next-bit security
+    - given all previous bits, we shouldn't know anything more about next bit
+- forward security
+    - given current bit, we can't know anything about previous bits
 
 <!-- References -->
 \clearpage
