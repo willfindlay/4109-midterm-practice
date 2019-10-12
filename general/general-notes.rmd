@@ -1,0 +1,179 @@
+---
+author: |
+    | William Findlay
+title: |
+    | COMP4109 Midterm 1 General Notes
+date: \today
+#bibliography: untitled.bib
+biblio-style: ieee
+subparagraph: yes
+header-includes:
+    - \usepackage{findlayrmd}
+output:
+    pdf_document:
+        citation_package: biblatex
+        number_sections: true
+        fig_crop: true
+        fig_caption: true
+        keep_tex: false
+        pandoc_args: ["--listings"]
+---
+```{r,include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+options(kableExtra.latex.load_packages = FALSE)
+library(kableExtra)
+library(lubridate)
+```
+<!-- Setup -->
+\pagestyle{fancy}
+\counterwithin{lstlisting}{section}
+\renewcommand{\maketitle}{\oldmaketitle}
+
+<!-- Title page -->
+\maketitle
+\thispagestyle{plain}
+
+# Types of Cryptography
+
+- symmetric key
+    - shift ciphers
+    - block ciphers
+    - stream ciphers
+- asymmetric key (public-private key)
+- hashing
+- protocols
+
+# Security Notions Models
+
+- three components of a model
+    1. attack model
+        - ciphertext only attack (P) (COA)
+            - attacker attempts to decrypt ciphertext to plaintext
+        - known plaintext attack (P) (KPA)
+            - attacker knows one or more plaintext-ciphertext pairs
+        - chosen plaintext attack (A) (CPA)
+            - attacker chooses a plaintext and encrypts it to receive ciphertext
+        - chosen ciphertext attack (A) (CCA)
+            - attacker chooses a ciphertext and decrypts it to receive plaintext
+    1. security goal
+        - (IND) indistinguishability
+            - ciphertext should be indistinguishable from random string
+        - (NM) non-malleability
+            - cannot modify ciphertext so it decrypts to another plaintext that makes sense
+    1. level of security
+        - information theoretic
+            - attacker has unlimited resources at their disposal
+        - complexity theoretic
+            - attacker has resources bounded $O(p)$ where $p$ is the security parameter
+        - computational (realistic)
+            - attacker has the resources of $n$ computers
+
+- two components of a notion
+    - goal + attack model
+    - e.g. IND-COA or NM-COA or IND-KPA, etc.
+
+# Unicity Distance
+
+- expected minimum length of ciphertext needed to uniquely compute a secret key
+- $\frac{\log_2{\abs{K}}}{R_L\log_2{\abs{P}}}$
+    - where $R_L$ is redundancy of the language
+    - $R_\text{English}$ is about 0.75
+
+# Shift Ciphers
+
+## Caesar Cipher
+
+- choose a key from $\mathbb{Z}_{\abs{P}}$
+- $c_i = p_i + k \bmod{\abs{P}}$
+
+### Strengths
+
+- none really, this sucks
+
+### Weaknesses
+
+- easy to brute force
+- weak to frequency analysis
+
+## Affine Cipher
+
+- choose any $a$ and $b$ mod 26
+    - except $a$ gcd(a,26) must be 1
+- $k = (a,b)$ where
+    - $E_k(m) = (am + b) \bmod{26}$
+    - $D_k(c) = a^{-1}(c - b) \bmod{26}$
+
+### Strengths
+
+- better than caesar cipher
+- two unknowns
+
+### Weaknesses
+
+- use frequency analysis to solve for $a$ and $b$
+- not much better than Caesar really
+
+## Substitution Cipher
+
+- permute $P$ to get $\mathcal{A}$
+- sub $P_i$ fo $\mathcal{A}_i$
+
+### Strengths
+
+- no strengths, don't use this
+
+### Weaknesses
+
+- weak to CPA
+- weak to KPA
+- weak to COA
+    - frequency analysis
+    - exhaustive search won't work though
+
+## Vigen&egrave;re Cipher
+
+- choose some $k_l$ as a plaintext string of length $l$
+- encrypt $c_i = p_i + k_{i \bmod{l}} \bmod{\abs{P}}$
+
+### Strengths
+
+- much better than what we've seen so far
+- if the length of the key is equal to the length of the message, very strong
+
+### Weaknesses
+
+- can find candidate key lengths by factoring
+- weak to frequency analysis
+- multiple encryptions with same key opens up attacks
+
+## One-Time Pad
+
+- like Vigen&egrave;re except:
+    - change key each time
+    - perfect security if key length is equal to message length
+
+### Strengths
+
+- perfect security for key length = message length
+    - semantically secure in information theoretic security against COA
+
+### Weaknesses
+
+- key can only be used one time
+- key length the same as message length is kind of silly
+    - why not just send the message over the secure channel in the first place
+    - very long keys are impractical
+- each key needs to be truly random
+- has malleability
+    - no authentication, only confidentiality
+
+# Block Ciphers
+
+# Stream Ciphers
+
+# Hashing Functions
+
+# MACs
+
+<!-- References -->
+\clearpage
