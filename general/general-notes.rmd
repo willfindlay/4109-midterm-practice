@@ -406,7 +406,7 @@ library(lubridate)
 
 ## Generic Attacks of MACs
 
-- make a MAC from an unkeyed has function if Merkle-Damgard
+- make a MAC from an unkeyed hash function if Merkle-Damgard
     -  $H_k(m) = h(k || m)$
     - now we can compute $H_k(m||y)$ as selective forgery
     - only stipulation is we have to prepend original $m$
