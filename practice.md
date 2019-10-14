@@ -3,204 +3,164 @@ title: COMP4109 Midterm 1 Practice
 author: Findlay et al.
 ---
 
+
 1. A symmetric-key encryption scheme is defined as a 5-tuple (P,C,K,E,D). Complete the definition.
 
-Where:
+    P is plaintext space
+    C is ciphertext space
+    K is keyspace
+    E is encryption functions where $e_k \in E$
+    D is encryption functions where $d_k \in D$
 
-- $P$ is plaintext space
-- $C$ is ciphertext space
-- $K$ is keyspace
-- $E$ is a set of possible encryption rules $e_k \in E \forall k \in K$
-- $D$ is a set of possible decryption rules $d_k \in D \forall k \in K$
-
-$E_k$ and $D_k$ are defined such that $D_k(E_k(x)) = x \forall \text{plaintext } x$
+    where $d_k(e_k(m)) = m$ for all m in P and k in K
 
 2. Describe the shift cipher (Caesar cipher).
 
-Define a key $k \in K$ where $K \equiv \mathbb{Z}_{|P|}$.
-In other words, $k$ can be any integer mod the size of the plaintext space.
-Then, simply shift all plaintext characters by $k$ mod the size of the plaintext space.
+    Take $P=C=K=\mathbb{Z}_{26}$
+
+    Select one value for k.
+
+    For all $p_i \in p$, $c_i = p_i + k \bmod{26}$
+
 
 3. Explain one situation when the shift cipher gives you prefect security? (That is, you cannot determine the secret key with probability greater than 1/26.)
 
-You would probably have to be encrypting nonsense. At the very least, no frequency analysis should yield
-any keys that are more probable than others. This is hugely impractical; as soon as the caesar cipher is used for
-anything practical, it completely breaks.
+    -Where you are encrypting just one letter. OR
+    -Where you are encrypting gibberish.
+    -In both cases, requency analysis won'y work.
+
 
 4. Briefly explain the following (giving a possible real-world example for each if you can):
 
 	1. ciphertext-only attack
+        - attacker has one or more piece of ciphertext and tries to find k
+        - for example, brute forcing a shift cipher
 	2. known-plaintext attack
+        - attacker knows one or more ciphertext, plaintext pairs and tries to find k
+        - for example, a meet-in-the-middle attack on a double DES encryption
 	3. chosen plaintext attack
+        - attacker chooses plaintext and encrypts it to get ciphertext
 	4. chosen ciphertext attack
+        - attacker chooses ciphertext and decrypts it to get plaintext
 
-- ciphertext-only attack
-    - adv. is given $c$ = $E_k(m)$
-    - but they do not know $m$ or $E_k$
-- known-plaintext attack
-    - adv. knows one or more pairs $c_i,m_i$
-- chosen plaintext attack
-    - choose $m$ and given $c$
-- chosen ciphertext attack
-    - choose $c$ and given $m$
 
 5. What needs to be specified in a security model?
 
-- level of security for a security goal with respect to a specific attack model
+    - attack model
+    - security goal
+    - security level
+
 
 6. A symmetric-key encryption scheme is **semantically secure** if `Pr(m) = Pr(m|c)`. Explain what this means.
 
-- This means the probability of guessing the original message is the same as the probability of guessing
-the original message given the ciphertext.
-- In otherwords, a third party should not be able to determine
-*any* additional information about the plaintext (other than length), given the ciphertext.
+    - if the probability of guessing the message is the same as the probability of guessing the message given ciphertext
+    - for example, if you encrypted Tux and saw an outline of a penguin in the ciphertext image, it would not be semantically secure
+        - if the ciphertext was random noise, it would be semantically secure
 
 
 7. We briefly discussed **unicity distance** in class.  What does this mean?  Give an example of where it is important.
 
-- minumum length of ciphertext needed to uniquely compute the secret key
-- this is an estimate
-    - in actuality, it could be much different
-- having spurious keys is beneficial to add an element of uncertainty as to whether or not an attacker has guessed the correct key
+    - this is the average length of ciphertext needed to uniquely compute the key
+    - it depends on keyspace size, plaintext space size, and a redundancy coefficient for the language
+    - for example, it is important for determining whether or not spurious keys are a possibility when breaking shift ciphers
 
-\[
-u = \frac{\log_2(|K|)}{R_L\log_2{|P|}}
-\]
-where $R_L$ is a redundancy coefficient (English has about 0.75)
 
 8. The one-time pad is **unconditionally secure** (i.e., it provides perfect security). What are two disadvantages of the one-time pad?
 
-- in order for perfect security, Shannon showed we need a key as long as the plaintext
-    - this means that for example a 1TB hard drive would need a 1TB key
-    - this is a lot of redundancy
-    - also, difficult to share a 1TB key on a secret channel
-        - if we can do that, why not just shared the 1TB message on the secret channel?
-- having to pick a new random key each time (esp. given length above) can introduce a lot of overhead and logistical issues
+    - key size needs to be huge (at least same size as plaintext)
+    - need to use a new key each time
+    - key needs to be sufficiently random
+    - it malleable.... more in next question
+
 
 9. The one-time pad is **malleable**.  Briefly explain what this means and what it means for the one-time-pad.
 
-- this means that it is possible to transform the ciphertext into another ciphertext which still makes sense when decrypted
-- an attacker could modify the message on its way
-- this means we don't have any integrity or origin authentication
+    - it means that an attacker could modify the ciphertext to decrypt to a different but still meaningful message
+    - this means it only prrovides confidentiality, not authentication (data origin and data integrity)
 
 
 10. How is a stream cipher related to the one-time pad?
 
-- stream ciphers also encode using random bits
-- however, they can use a small number of truly random bits to generate a secret key
-    - this key is then used with a nonce
-- this produces a long keystream
-- it is similar to the one-time pad but addresses a few of its disadvantages
+    - stream cipher and one-time pad both encrypt by xoring with a pseudorandom key
+    - stream cipher does this one bit at a time and generates the keystream as it goes
+        - so it's like a one-time pad but with a small tradeoff in security for a big win in terms of overhead
 
 
 11. Name a block cipher that you can use to encrypt Carleton's yearly calendar. If you cannot explain why not.
 
-- You could use a CBC block cipher with ciphertext stealing padding and a block size of say 128 bits
-- encode the calendar in some meaningful way (say, as a JSON object)
-- pad with zeroes until we get a multiple of 128 bits
-- take the first block and xor with an IV
-- then encrypt with encryption rule
-- then take that ciphertext and xor with the next block
-- and so on
-- then swap last two blocks and truncate by how much we padded
-- this is our final encrypted calendar
+    - you could use CBC mode AES block cipher with ciphertext stealing
+    - you would just have to encode the calendar in some meaningful way first
+
 
 12. Briefly explain the following security goals of block ciphers
 
 	1. diffusion
+        - one bit changed in m should change about half the bits in c
+        - this complicates the relationship between m and c
+        - it helps provide semantic security and can help provide authentication
 	2. confusion
+        - one bit in c should depend on many bits in k
+        - this complicates the relationship between c and k
 	3. key size
-
-- diffusion
-    - changing a single bit of the message should change about half the bits in ciphertext
-    - this is helpful for reducing malleability
-    - also helps to complicate the ciphertext
-- confusion
-    - each bit of c should depend on several bits of k
-    - this helps complicate the relationship between c and k
-    - complicates the overall ciphertext
-- key size
-    - key size should be big enough to stop easy attacks
-    - should be small enough to still be efficient
+        - key should be large enough, but not too large such that it would add too much overhead
 
 
 13. DES was a great block cipher when it was created.  Briefly explain the two reasons why it is no longer great today.
 
-- its key size was way to small
-    - brute forcing has gotten easier due to more powerful hardware
-- it had a small block size
-    - it is highly likely to have a duplicated block (which could yield information about the key)
-
+    - the key size was way too small
+        - 2^56 operations is not good enough to stop reasonably good modern hardware
+    - block size was way to small
+        - combined, the above two mean that smart attackers can do even less than 2^56 operations
+        - specialized hardware can break it in less than a day
 
 14. Describe double-DES (2DES) as described in class. Why is 2DES essentially no more secure than DES even though the number of key bits has doubled? Explain the attack involved.
 
-- weak to a "meet in the middle" attack
-    - because the block length is still the same and we are not
-      really making the problem any harder just by doubling key size
-- how meet in the middle works
-    - three plaintext ciphertext pairs
-    - compute $D_h_1(c_1)$ for all possible keys $h_1$ and store $(D_h_1(c_1), h_1)$ pairs in a hash table
-    - compute $E_h_2(m_1)$ for all possible keys $h_2$
-        - check to see if the result is a key in the hash table
-        - then verify $E_h_2(E_h_1(m_2)) = c_2$ and $E_h_2(E_h_1(m_3)) = c_3$
-- it's basically as fast as bruteforcing regular DES
-    - $2^{57}$
+    - 2DES was through to double key length by encrypting with a second key
+    - this allows a KPA attack called a meet in the middle attack with 3 pairs of m,k
+    - using this attack, you can easily find the keys in 2^57 calls
 
 
 15. Triple-DES (3DES) is believed to be a more secure replacement for DES than double-DES.  It encrypts, decrypts then encrypts using DES with 3 different keys K1, K2, K3.
 
 	1. 3DES has 3*56 bits of secret key. Describe how the attack on 2DES can be mounted on 3DES and what the **effective keylength** is. The effective keylength is the number of bits of a key in which a brute force attack has the same cost as the best attack on the system.
+    - the effective keylength is 2^112 which is how many operations we need to do in order to run a meet-in-the-middle attack
 	2. Explain why anyone might want to use 3DES with K1=K2=K3.
+        - this is useful for backward compatibility with DES but it is insecure, so not recommended
 
-- pretty much run the same attack with an extra step of decrypting with the extra key in the middle
-    - effective keylength is 112 since it takes $2^{112}$ steps here
-- having all three keys identical gives backwards compatibility to DES
-    - but this is not recommended
-      as now we can brute force in $O(2^{56})$ steps
 
 16. What block cipher should you use today if you were to need to use a block cipher?
 
-- probably AES-256
-    - considered the most secure
-    - AES-192 is okay
-    - AES-128 probably shouldn't be used compared to the other two
+    - AES using CTR mode is probably the most recommended
 
 
 17. Briefly explain what a block cipher mode of operation is.
 
-- use of a block cipher to accomplish a cryptographic goal
-- modes + encryption rule + padding method yields the full block cipher
-- example mode = CBC
-    - IV for first block or ciphertext of previous block for subsequent blocks to xor plaintext before encrypting
+    - mode of operation is a way of running the underlying block cipher with respect to how the blocks (if at all) interact with each other or what operations are done before/after encryption
+    - for example, CBC mode chains the blocks together by xoring previous ciphertext with plaintext before encrypting
 
 
 18. What is the ECB (electronic code book) mode of operation?  What is one flaw of ECB?
 
-- encrypt each block individually
-- it has no semantic security
+    - encrypts blocks one at a time with no interaction between them
+    - it doesn't provide semantic security
 
 
 19. What is the CBC (cipher block chaining) mode of operation? Why should the initialization vector (IV) be different for each plaintext message we want to encrypt with this mode?
 
-- cbc is when we XOR the plaintext with a vector before encrypting
-    - for the first block, we use an IV
-    - for the other blocks, we use the previous block's resulting ciphertext
-- without a different IV each time, we open ourselves up to known-plaintext attacks
-    - the attacker will know something about subsequent encryptions by figuring out the common IV
+    - chain blocks together by xoring plaintext block with previous ciphertext before encrypting
+    - first block is a special case, where we xor with IV instead
+    - we want to have a different IV each time because otherwise we may reveal information to an attacker
+    - if two first blocks are the same and have the same IV, we have leaked information about k
 
 
 20. There are three properties a cryptographic hash function might have.  Briefly explain each.
 
 	1. pre-image resistance (one-way)
+        - hard to find x given h(x)
 	2. second pre-image resistance (week collision resistance)
+        - hard to find x' given x such that h(x)=h(x')
 	3. collision resistance (strong collision resistance)
-
-- pre-image resistance (one-way)
-    - if we have some hash $H(m) = h$, it should be intractable that we determine $m$ using $h$
-- second pre-image resistance (week collision resistance)
-    - given a fixed $H(m_1)$, it should be intractable to find $m_2$ such that $H(m_1) = H(m_2)$
-- collision resistance (strong collision resistance)
-    - should be intractable to find any two inputs such that $H(m_1) = H(m_2)$
+        - hard to find any x,x' pair such that h(x)=h(x')
 
 
 21. The hash function from class
@@ -212,74 +172,57 @@ J(x) = / 1||x,    if |x| == n bits
 
 is collision resistant, if `H(x)` is collision resistant, but not pre-image resistant.  Briefly explain why this so.
 
-- collision resistance is clear
-    - 1 || x will be unique for any n-bit x since if x is not n-bits we will have 0 || H(x)
-    - we already said the H(x) was collision resistant, so the second case must be collision resistant too
-- it will not be pre-image reistant because:
-    - if the first bit is 1, we know that the next bits have to be the original x
-    - if the first bit is 0, that depends on the pre-image resistance of H(x)
+    - collision resistant
+        - no collisions in bottom since H(x) is collision resistant
+        - no collisions in top since x is unique and since top and bottom always differ by most significant bit
+    - not pre-image resistant
+        - if the output's MSB is 1, we know the other bits are just x, so we can find x easily
 
 
-22. Suppose a hash function outputs an n-bit hash.  How many times do we expect to compute this function (with random inputs) before we get a collision? What name do we give to this result?
+21. Suppose a hash function outputs an n-bit hash.  How many times do we expect to compute this function (with random inputs) before we get a collision? What name do we give to this result?
 
-- we expect a collision after about $2^{n/2}$ steps where $n$ is the hash length
-    - this is called the birthday attack
-    - related probabilistically to the idea of finding two people with the same birthday
-
-
-23. What is the Merkle-Damgard construction for hash functions?
-
-- take message blocks and add padding to last one until they are all size $r$
-- run through a compression function that maps to size $n$
-- use an initialization vector for initialization on the first compression function,
-then use subsequent compression outputs to initialize next
-- sometimes a final step before output
-- this is used in many hash functions in the 90s
-    - MD5
-    - SHA-1
-    - SHA-2
-- susceptible to length extension attacks
-    - we can compute the hash value of a message we don't already know
+    - 2^{n/2} times
+    - birthday attack, named after the birthday problem
 
 
-24. What is MAC? (What is this an acronym for?) What is it used for (which problem does it help address)?
+22. What is the Merkle-Damgard construction for hash functions?
 
-- message authentication code
-    - calculated using a private key, verified using a public key
-- it addresses the problem of data origin authentication and data integrity authentication
+    - run IV and a message block through a compression function
+    - run the output of that compression function and another message block through another compression function
+    - and so on.....
+    - take last output as your hash
+    - somtimes an extra step right before we take the hash
 
 
-25. Briefly explain what each of the following mean w.r.t. MACs.
+23. What is MAC? (What is this an acronym for?) What is it used for (which problem does it help address)?
+
+    - message authentication code
+    - addresses data origin and data integrity authentication
+
+
+24. Briefly explain what each of the following mean w.r.t. MACs.
 
 	1. existential forgery
+        - there exists some forgery such that m' can be sent with the tag of m
 	2. selective forgery
+        - the attacker can choose some m' that can be sent with the tag of m
 	3. universal forgery
-
-- existential forgery
-    - attacker constructs at least one message, signature pair where the message was not created by the signer
-- selective forgery
-    - attacker creates a message, signature pair where the message was chosen beforehand by the attacker
-- universal forgery
-    - attacker creates a valid signature for any given message
+        - the attacker can send any message they want with a valid tag
 
 
-26. Explain why `H_k(m) = h(k||m)` and `H_k(m) = h(m||k)` are not secure MACs when the underlying hash function uses the Merkle-Damgard constructions? Go through the attacks for each.
+25. Explain why `H_k(m) = h(k||m)` and `H_k(m) = h(m||k)` are not secure MACs when the underlying hash function uses the Merkle-Damgard constructions? Go through the attacks for each.
 
-- for $h(k||m)$
-    - an attacker could append bits to the message and the hash would still appear valid
-    - length extension
-- for $h(m||k)$
-    - length extension no longer works
-    - but now it is potentially vulnerable to hash collision attacks
+    - for h(k||m), a simple length extension attack will do the trick
+    - for h(m||k), length extension no longer works, but we are vulnerable to hash collision attacks
 
 
-27. The CBC-MAC uses a block cipher in cbc-mode to create a hash function. Is this secure? When is it secure and when is it not?
+26. The CBC-MAC uses a block cipher in cbc-mode to create a hash function. Is this secure? When is it secure and when is it not?
 
-- fixed message lengths cause problems
-    - in that case, security is based on the underlying block cipher
+    - it is secure when we only allow fixed length messages (assuming the underlying block cipher is secure)
+    - if we allow variable-length messages, we are vulernable to length-extension attacks
 
 
-28. Suppose we propose the following MAC: given a message broken into blocks `m_1, m_1, ..., m_r`, we compute
+27. Suppose we propose the following MAC: given a message broken into blocks `m_1, m_1, ..., m_r`, we compute
 
 ```
  c_i = AES_k(m_{i}) XOR  c_{i-1}
@@ -288,43 +231,36 @@ for `i=1..r`, where `k` is a shared secret key and `c_0 = k`.
 
 The MAC tag is the value `c_r`. Is this a secure MAC? Can you create any forgeries? Does it matter if we insist that the message length be a multiple of the block length? Does it matter if we have to pad the last block?
 
-- this is CBC mode block cipher with AES
-    - for fixed length messages this is secure since AES is secure
-    - if we allow variable length messages, it is no longer secure
-- can you create forgeries?
-    - sure you can
-    - if we know two message, tag pairs we can derive a third message-tag pair without knowing k
-- it doesn't matter what other restrictions we put in place, as long as we have variable length messages
+    - this is just a CBC-MAC using AES
+    - with fixed length, it would be secure since AES is secure
+    - insisting message length be a multiple of block length does not make a difference as long as it can still vary
+    - it shouldn't matter if we have to pad the last block
 
 
-29. EMAC is the encrypted CBC-MAC.  How does it differ from cbc-mac? Is this secure? What flaw in CBC-MAC does EMAC address?
+28. EMAC is the encrypted CBC-MAC.  How does it differ from cbc-mac? Is this secure? What flaw in CBC-MAC does EMAC address?
 
-- instead of spitting out your MAC at the end, encrypt one more time with $k_2$ and take that as your MAC
-- a longer $k_2$ allows for arbitrary message length
-    - we are now fully dependent on security of underlying block cipher
-
-
-30. In class we saw why that the first version of SSL in Netscape was insecure. Briefly explain why. (The full exact details are not required)
-
-- a lot of the "randomness" depended on:
-    - very poor hashing algorithms (MD5)
-    - values that are not secret (PID)
-    - secret values that live in a small space (easier to guess) (microseconds -> $2^{30}$)
-    - values that had an uneven distribution (PPID)
+    - encrypt the result of CBC-MAC with a second key
+    - it is as secure as the underlying block cipher
+    - addresses the problem of length-extension attacks in CBC-MACs
+        - now we can allow messages of any length with no security issues
 
 
-31. A cryptographically secure pseudorandom bit generator (CSPRBG) should have two additional properties compared to a typical PRBG.  Briefly, explain the following two properties.
+29. In class we saw why that the first version of SSL in Netscape was insecure. Briefly explain why. (The full exact details are not required)
+
+    - used some values that were not secret (pid, ppid)
+    - used some values that were not uniformly distributed (ppid)
+    - used some modular values that did not have a large period (milliseconds)
+
+
+30. A cryptographically secure pseudorandom bit generator (CSPRBG) should have two additional properties compared to a typical PRBG.  Briefly, explain the following two properties.
 
 	1. next-bit test
+        - given n-1 bits of c, we don't know any extra information about bit n of c
 	2. forward security
-
-- next-bit test
-    - cannot guess next bit given all previous bits with more than 1/2 probability
-- forward security (just remember this as opposite of next-bit)
-    - exposing current state should not reveal previous bits
+        - given bit n of c, we don't know any extra information about the n-1 bits of a c that came before
 
 
-32. The Blum-Blum-Shub PRBG is as follows:
+31. The Blum-Blum-Shub PRBG is as follows:
 
 ```
   choose random primes p,q with p,q != 3 mod 4
@@ -336,60 +272,45 @@ The MAC tag is the value `c_r`. Is this a secure MAC? Can you create any forgeri
   od
 ```
 	1. why is this not used in practice?
+        - a lot of overhead associated with finding primes, factoring, and performing mod on large numbers
 	2. why is it considered secure?
-
-- why is this not used in practice?
-    - it's very slow
-    - finding primes takes time
-    - finding exponent and mod of large numbers takes time
-- why is it considered secure?
-    - because factoring is believed to be difficult
-    - if P =/= NP
+        - because prime factorization is considered a hard problem
+        - and we think P != NP
 
 
-33. Briefly outline how an exhaustive search (brute-force) can be used to find the secret key in a symmetric-key encryption scheme.  This is a ciphertext-only attack. Briefly outline when this attack works, when it fails and
+
+
+32. Briefly outline how an exhaustive search (brute-force) can be used to find the secret key in a symmetric-key encryption scheme.  This is a ciphertext-only attack. Briefly outline when this attack works, when it fails and
 when the time/space complexity of it.
 
-- try every key one by one until you get the plaintext
-- how do we know when we found the plaintext?
-    - there are some clever ways of verifying
-    - frequency analysis on letters
-    - frequency anlysis on digraphs in a given language
-    - check if the decrpyted plaintext conforms to some sort of protocol
-- when does the attack fail?
-    - if there are spurious keys for the message
-    - if the message does not allow for frequency analysis, digraph analysis etc.
-    (if it was a random message to begin with or only one letter long, etc.)
-- time complexity?
-    - $O(|K|)$
-    - $2^n$ if key is $n$ bits long
+    - would fail if we have spurious keys or
+    - if the the set of keys we need to try is way too big or
+    - if the message was nonsense in the first place or
+    - if the message was only one character long
+    - first, we would use frequency analysis to find candidate key lengths if the scheme allows
+    - next, we would try the keys one by one and use a combination of frequency analysis and digraph frequency analysis for our language to tell us when we found a likely match
+    - O(|K|) in space and time complexity (this can be reduced by making intelligent guesses)
 
 
-34. Suppose you have a private key encryption scheme.  Explain why you might want to send a MAC along with the ciphertext when sending messages.
 
-- a MAC would give
-    - data integrity authentication
-    - data origin authentication
-- prevents attacker from spoofing a message from you
-- prevents attacker from modifying data en route
+33. Suppose you have a private key encryption scheme.  Explain why you might want to send a MAC along with the ciphertext when sending messages.
+
+    - the MAC would help provided data integrity authentication
+    - would also help provide even more proof of data origin
 
 
-35. Suppose you have an ideal random function
+34. Suppose you have an ideal random function
 ```
 f : {0,1}^n --> {0,1}^{60}.
 ```
 	1. What is the probability that two random inputs lead to a collision?
+        - same idea as birthday problem
+        - 1 - (2^60 - 2) / (2^60 - 1)
 	2. How many randomly chosen elements do we need so that the probability that a collision occurs is 1/2.
-
-- What is the probability that two random inputs lead to a collision?
-    - it's just like the birthday problem
-    - for $n > 60$ the probability of a collision is 1
-- How many randomly chosen elements do we need so that the probability that a collision occurs is 1/2.
+        - 2^{n/2}
 
 
-
-
-36. Suppose we have a hash function
+35. Suppose we have a hash function $
 ```
 h : Z_12 --> Z_8
 ```
@@ -414,36 +335,35 @@ x    h(x)
 Using this hash function, illustrate why it does not satisfy
 any of the properties that a cryptographic hash function might have (pre-image resistance, second pre-image resistance, collision resistance).
 
-- pre-image resistance -> not there because 4 maps uniquely to 0, etc.
-- second pre-image -> given one output, it's trivial to find another input that maps to it
-- collisions -> occur all over the place on the output
+    - PIR
+        - it's easy to find x = 0 if h(x) = 4
+    - SPIR
+        - it's easy to find x' = 1 if x = 4 so that h(x) = h(x')
+    - CR
+        - there are lots of h(x) that have the same output
 
 
 
-37. Describe the padding scheme outlined in class (and discussed in the textbook).
+36. Describe the padding scheme outlined in class (and discussed in the textbook).
 
-- pad with (block length - number of bytes) block length - number of bytes times
-- if we have a perfect match, add one block and pad with block length block length times
+    - take x = number of bytes in a block - number of bytes in last block
+    - append x x times
+    - if the last block matched perfectly, append block size block size times to a new block
 
 
-38. What is ciphertext stealing? Why would we want to employ this? How does it work when using CBC-mode for a block cipher?
+37. What is ciphertext stealing? Why would we want to employ this? How does it work when using CBC-mode for a block cipher?
 
-- ciphertext stealing in CBC is when you
+    - minimizes space overhead from padding
     - pad with all 0's
     - encrypt as normal
-    - at the end, swap last two blocks
-    - strip off the end of the new last block the number of bits you padded
-- it eliminates the overhead related to padding
+    - swap last two blocks
+    - strip number of bits we padded off the end of the new last block
 
 
+38. Given the ciphertext "YOUCANTDECRYPTME", encrypted using the one-time-pad, what is the corresponding plaintext?
 
-39. Given the ciphertext "YOUCANTDECRYPTME", encrypted using the one-time-pad, what is the corresponding plaintext?
+    - this is not possible to find out by hand
+    - the only way would be frequency analysis + brute force but this is still extremely infeasible, and certainly can't be done by hand
 
-- If the key was sufficiently random, this should be pretty much impossible to do by hand.
-- If we were somehow able to intercept the secret key or had sufficient computational resources available, things would
-be different
-- Another thing to bear in mind is that if the key is shorter than the plaintext, we can potentially
-use clever frequency analysis and factoring techniques to help determine the key.
-- However, as it stands, this is pretty much a trick question.
 
 
