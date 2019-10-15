@@ -88,6 +88,7 @@ author: Findlay et al.
 
 11. Name a block cipher that you can use to encrypt Carleton's yearly calendar. If you cannot explain why not.
 
+    - without a mode this would likely not be possible since the calendar will be larger than block size
     - you could use CBC mode AES block cipher with ciphertext stealing
     - you would just have to encode the calendar in some meaningful way first
 
@@ -213,7 +214,11 @@ is collision resistant, if `H(x)` is collision resistant, but not pre-image resi
 25. Explain why `H_k(m) = h(k||m)` and `H_k(m) = h(m||k)` are not secure MACs when the underlying hash function uses the Merkle-Damgard constructions? Go through the attacks for each.
 
     - for h(k||m), a simple length extension attack will do the trick
+        - can compute H_k(m||y) given m and length of k but not k
     - for h(m||k), length extension no longer works, but we are vulnerable to hash collision attacks
+        - find a collision x1, x2
+        - get tag for x1 and send x2 with same tag
+        - this apparently only works if k is one block length
 
 
 26. The CBC-MAC uses a block cipher in cbc-mode to create a hash function. Is this secure? When is it secure and when is it not?
