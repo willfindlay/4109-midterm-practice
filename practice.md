@@ -238,6 +238,7 @@ The MAC tag is the value `c_r`. Is this a secure MAC? Can you create any forgeri
 
     - this is just a CBC-MAC using AES
     - with fixed length, it would be secure since AES is secure
+    - with arbitrary length we are vulnerable to m||m1 xor t||m2... length extension attack
     - insisting message length be a multiple of block length does not make a difference as long as it can still vary
     - it shouldn't matter if we have to pad the last block
 
