@@ -4,6 +4,8 @@ author: Findlay et al.
 ---
 
 
+# Jason Practice
+
 1. A symmetric-key encryption scheme is defined as a 5-tuple (P,C,K,E,D). Complete the definition.
 
     P is plaintext space
@@ -371,5 +373,118 @@ any of the properties that a cryptographic hash function might have (pre-image r
     - this is not possible to find out by hand
     - the only way would be frequency analysis + brute force but this is still extremely infeasible, and certainly can't be done by hand
 
+# Will Practice
+
+ 1. Tell me as much as you can about each of the following:
+
+    a) AES
+    b) DES
+    c) 2DES
+    d) 3DES
 
 
+ 2. Tell me as much as you can about each of the following:
+
+    a) ECB
+    b) CBC
+    c) CTR
+
+
+ 3. Tell me as much as you can about each of the following:
+
+    a) Normal padding
+    b) Ciphertext stealing
+
+
+ 4. Draw a picture of CBC encryption, a picture of CBC-MAC, and a picture of both 2-key and 3-key EMAC.
+
+
+ 5. Draw a picture of a Merkle-Damgard-style hash function. Explain why it sucks and we should never use it.
+
+
+ 6. What is the main problem with CBC-MAC? How does EMAC address this issue?
+
+
+ 7. Why do both secret suffix and secret prefix MAC codes suck when hashed using Merkel-Damgard constructions?
+    Is a secret sandwich any better? Why or why not?
+
+
+ 8. Discuss three different types of cryptographic security models. Be sure to vary the properties of each.
+    (Hint: Recall that a cryptographic security model has three properties.)
+
+
+ 9. What does non-malleability mean? What does indistinguishably mean? What do they have in common?
+
+
+10. What are the next-bit test and forward security? How are they similar? Different?
+
+
+11. What kind of attack is easy to do on a CBC-MAC? How does it work? Discuss two ways we can prevent it.
+
+
+12. What was the problem with the poker shuffling algorithm we looked at in class? Why are security reviews important?
+
+
+13. Your friend tells you that it is important to keep your cryptographic algorithms proprietary because, if people know how
+    they work, they will be easier to crack. Is this a reasonable statement? Why or why not?
+
+
+14. What are MACs used for? Name two important goals they accomplish. What properties of MACs allow this to be the case?
+
+
+15. What is the difference between keyed and unkeyed hashing? Which is more secure? What purposes are they each used for?
+
+
+16. Describe the three important properties of cryptographic hashing. Why are they important?
+
+
+17. Suppose a hash function with collision resistance H(x) = f(g(x)||g(x)) where f and g are also hash functions.
+    Does this imply that f is also collision resistant? g? Both? Explain your answer.
+
+
+18. What is the Rho method for finding collisions? Why is it better than the hash table method?
+    What problem does it seek to solve?
+
+
+19. Name a few hash functions that use Merkel-Damgard. Why did we stop using these?
+
+
+20. How is a stream cipher different from a shift or block cipher? How is it similar?
+    Describe a stream cipher we have seen in class.
+
+
+21. AES is the standard for block ciphers today. Why is it better than DES, 2DES, and 3DES?
+
+
+22. Why is the one-time pad not really used despite its "perfect security"? Give a few reasons.
+
+
+23. What is the Blum-Blum-Shub PRNG algorithm? What is good about it? What is bad about it?
+
+
+24. A mode of operation is only as good as its underlying block cipher. When is that statement true? When is it false?
+
+
+25. A stream cipher is only as secure as its PRBG. Is this a true statement? Why or why not?
+
+
+26. What is the difference between synchronous and asynchronous stream ciphers? Explain it in the context of Alice and Bob.
+
+
+27. Why do symmetric key MAC codes not provide non-repudiation despite providing authentication?
+
+
+28. On the assignment, we showed that LCG PRNGs are not secure. What property or properties do they not satisfy?
+    How were we able to show this?
+
+
+29. What is the first rule of crypto?
+
+
+30. Why does the Caesar cipher suck? Can you think of a case where it especially sucks?
+
+
+31. How do the concepts of frequency analysis and digraph analysis relate to brute force attacks?
+
+
+32. What is unicity distance? How does it relate to the concept of spurious keys?
